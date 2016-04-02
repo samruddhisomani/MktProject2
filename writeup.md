@@ -16,6 +16,7 @@
 # Executive Summary
 
 # Business Context
+Anhauser-Bush InBev is a leading multinational beverage and brewing company with roughly 25 percent market share world wide. Their portfolio ranged from global brands, including Budweiser and Corona, to local brands, such as Harbin and Jupiler. Currently, they are looking to expand their presence in the US market with their Dutch premium beer, Hertog Jan, and they need to validate that this is good decision. If they decide to enter the market, ABInBev still has to determine how they want to position Hertog Jan in the market. Their goal is to maximize adoption of the brand Hertog Jan in the new market.
 
 # Conjoint Analysis
 
