@@ -1,0 +1,49 @@
+---
+title: "proj2"
+author: "Vicky"
+date: "April 2, 2016"
+output: pdf_document
+---
+```{r}
+library(AlgDesign)
+desFull <- gen.factorial( levels=c(3,3,2,2), nVars=4, varNames=c("attr1","attr2","feat1","feat2"), center=FALSE)
+print(desFull)
+fml = ~ factor(attr1) + factor(attr2) + factor(feat1) + factor(feat2)
+desDummies = model.matrix(fml, data=desFull)
+colnames(desDummies) = paste0("D",(1:dim(desDummies)[2]))
+print(desDummies)
+desFract = optFederov(~ . -1,data=desDummies,nTrials=12)
+print(desFract)
+eval.design(~.-1, desFract$design)
+
+#Check dummies for model with just main effects
+desD1 = model.matrix(~factor(attr1) + factor(attr2), data=desFull)
+print(desD1)
+y = desD1*c(1,.2,.3,.4)+rnorm(6,sd=.1) 
+res1a = lm(y~factor(attr1) + factor(attr2), data=desFull) 
+print(summary(res1a))
+
+# Now draw randomly a “half” random fractional factorial design
+sampl = sample.int(n=6,size=3,replace=TRUE)
+desHalf = desFull[sampl,]
+print(desHalf)
+res1b=lm(y[sampl]~factor(attr1)+factor(attr2), data=desHalf)
+print(summary(res1b))
+
+# Now take a random draw of conditions, still 6 observations, but some conditions will be double counted (loss of information)
+sampl = sample.int(n=6,size=6,replace=TRUE)
+desRandom = desFull[sampl,]
+print(desRandom)
+
+# compute some optimal fractional factorial designs
+formulaMainEffects1 = ~ attr1 + attr2 + feat1 +feat2
+desConjointFract1 = AlgDesign::optFederov(formulaMainEffects1, data=desFull, nTrials=24)
+eval.design(formulaMainEffects1,desConjointFract1$design)
+
+# now with interaction between feat1 and feat2
+formulaIntEffects2 = ~ attr1 + attr2 + feat1 + feat2 + feat1*feat2
+desConjointFract2<- optFederov(formulaIntEffects2,data=desFull,nTrials=24)
+print(desConjointFract2)
+eval.design(formulaIntEffects2,desConjointFract2$design)
+```
+
