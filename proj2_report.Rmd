@@ -1,8 +1,15 @@
+---
+title: "proj2"
+author: "Vicky"
+date: "April 2, 2016"
+output: pdf_document
+---
+```{r}
 library(AlgDesign)
 desFull <- gen.factorial( levels=c(3,3,2,2), nVars=4, varNames=c("attr1","attr2","feat1","feat2"), center=FALSE)
 print(desFull)
 fml = ~ factor(attr1) + factor(attr2) + factor(feat1) + factor(feat2)
-desDummies = model.matrix(fml, data=des)
+desDummies = model.matrix(fml, data=desFull)
 colnames(desDummies) = paste0("D",(1:dim(desDummies)[2]))
 print(desDummies)
 desFract = optFederov(~ . -1,data=desDummies,nTrials=12)
@@ -31,11 +38,12 @@ print(desRandom)
 # compute some optimal fractional factorial designs
 formulaMainEffects1 = ~ attr1 + attr2 + feat1 +feat2
 desConjointFract1 = AlgDesign::optFederov(formulaMainEffects1, data=desFull, nTrials=24)
-eval.design(formulaMainEffects,desConjointFract1$design)
+eval.design(formulaMainEffects1,desConjointFract1$design)
 
 # now with interaction between feat1 and feat2
 formulaIntEffects2 = ~ attr1 + attr2 + feat1 + feat2 + feat1*feat2
 desConjointFract2<- optFederov(formulaIntEffects2,data=desFull,nTrials=24)
 print(desConjointFract2)
 eval.design(formulaIntEffects2,desConjointFract2$design)
-# variance is higher than previous model
+```
+
