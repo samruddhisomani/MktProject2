@@ -5,45 +5,73 @@ date: "April 2, 2016"
 output: pdf_document
 ---
 ```{r}
+rm(list = ls())
 library(AlgDesign)
-desFull <- gen.factorial( levels=c(3,3,2,2), nVars=4, varNames=c("attr1","attr2","feat1","feat2"), center=FALSE)
-print(desFull)
-fml = ~ factor(attr1) + factor(attr2) + factor(feat1) + factor(feat2)
-desDummies = model.matrix(fml, data=desFull)
-colnames(desDummies) = paste0("D",(1:dim(desDummies)[2]))
-print(desDummies)
-desFract = optFederov(~ . -1,data=desDummies,nTrials=12)
-print(desFract)
-eval.design(~.-1, desFract$design)
+######################## Full factorial with gender ###########################################
+desFull <- gen.factorial( levels=c(3,3,2,2), nVars=4, varNames=c("f1","f2","f3","f4"), center=FALSE)
 
-#Check dummies for model with just main effects
-desD1 = model.matrix(~factor(attr1) + factor(attr2), data=desFull)
-print(desD1)
-y = desD1*c(1,.2,.3,.4)+rnorm(6,sd=.1) 
-res1a = lm(y~factor(attr1) + factor(attr2), data=desFull) 
-print(summary(res1a))
+benefits = c("tasty", "healthy", "both")
+association = c('European', 'Dutch', 'no association')
+names = c('translated', 'original')
+gender = c('female', 'male')
 
+desFull$benefits = benefits[desFull$f1]
+desFull$associations = association[desFull$f2]
+desFull$names = names[desFull$f3]
+desFull$genders = gender[desFull$f4]
+
+desFull[, c(5, 6, 7, 8)]
+
+############################## fractional factorial with gender ###############################
+# now with interaction between gender and everything else
+formulaIntEffects3 = ~ benefits + associations + genders + names + genders*benefits + genders*associations + genders*names
+desConjointFract3<- optFederov(formulaIntEffects3,data=desFull[, c(5, 6, 7, 8)],nTrials=18)
+print(desConjointFract3)
+eval.design(formulaIntEffects3,desConjointFract3$design)
+des.female = desConjointFract3$design[1:9,]
+write_csv(des.female, 'female.csv')
+des.male = desConjointFract3$design[10:18,]
+write_csv(des.male, 'male.csv')
+
+############################## Full factorial without gender ##################################
+desFull <- gen.factorial( levels=c(3,3,2), nVars=3, varNames=c("f1","f2","f3"), center=FALSE)
+
+benefits = c("tasty", "healthy", "both")
+association = c('European', 'Dutch', 'no association')
+names = c('translated', 'original')
+gender = c('female', 'male')
+
+desFull$benefits = benefits[desFull$f1]
+desFull$associations = association[desFull$f2]
+desFull$names = names[desFull$f3]
+
+desFull[, c(3, 4, 5)]
+
+############################## 
 # Now draw randomly a “half” random fractional factorial design
-sampl = sample.int(n=6,size=3,replace=TRUE)
+sampl = sample.int(n=36,size=18,replace=TRUE)
 desHalf = desFull[sampl,]
 print(desHalf)
-res1b=lm(y[sampl]~factor(attr1)+factor(attr2), data=desHalf)
+res1b=lm(y[sampl]~factor(benefits) + factor(association) + factor(gender) + factor(name), data=desHalf)
 print(summary(res1b))
 
-# Now take a random draw of conditions, still 6 observations, but some conditions will be double counted (loss of information)
-sampl = sample.int(n=6,size=6,replace=TRUE)
+# Now take a random draw of conditions, still 36 observations, but some conditions will be double counted (loss of information)
+sampl = sample.int(n=36,size=36,replace=TRUE)
 desRandom = desFull[sampl,]
 print(desRandom)
 
-# compute some optimal fractional factorial designs
-formulaMainEffects1 = ~ attr1 + attr2 + feat1 +feat2
+# compute some optimal fractional factorial designs with no interaction
+formulaMainEffects1 = ~ benefits + association + gender + name
 desConjointFract1 = AlgDesign::optFederov(formulaMainEffects1, data=desFull, nTrials=24)
+print(desConjointFract1)
 eval.design(formulaMainEffects1,desConjointFract1$design)
 
-# now with interaction between feat1 and feat2
-formulaIntEffects2 = ~ attr1 + attr2 + feat1 + feat2 + feat1*feat2
-desConjointFract2<- optFederov(formulaIntEffects2,data=desFull,nTrials=24)
-print(desConjointFract2)
-eval.design(formulaIntEffects2,desConjointFract2$design)
+# now with interaction between gender and everything else
+formulaIntEffects3 = ~ benefits + association + gender + name + gender*benefits + gender*association + gender*name
+desConjointFract3<- optFederov(formulaIntEffects3,data=desFull,nTrials=24)
+print(desConjointFract3)
+eval.design(formulaIntEffects3,desConjointFract3$design)
+
+sum(desConjointFract3$rows == desConjointFract1$rows)
 ```
 
