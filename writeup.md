@@ -91,4 +91,7 @@ representativeness, and reliability of the results.
 2) That all relevant extraneous factors and customer characteristics are controlled for.
 3) InBev would like to get a sense of the extent that Hertog Jan cannibalizes its other major brands
 in the US: Becks and Stella Artois.
+<<<<<<< HEAD
+>>>>>>> samruddhisomani/master
+=======
 >>>>>>> samruddhisomani/master
