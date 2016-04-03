@@ -40,4 +40,18 @@ The following apply specifically to the true experiment. Instead of the full fac
 
 We recommend AB first conduct exploratory research as to whether this beer's taste appeals to the general American public and as to what price level and product tier is appropriate. Afterwards, a between-subjects full factorial design will help determine the best-performing profile (which may differ between advertising and packaging). This part ensures internal validity. To ensure external validity, we use a controlled test market to measure cross-price elasticities, own-price elasticities, and promotion and advertising elasticities.
 
-We would also suggest AB consider whether they want to maximize adoption for this particular beer or whether maximize profit across their entire product portfolio. They should also consider the effects of containers--green bottles versus brown bottles versus cans as well as six-packs versus eighteen-packs. 
+We would also suggest AB consider whether they want to maximize adoption for this particular beer or whether maximize profit across their entire product portfolio. They should also consider the effects of containers--green bottles versus brown bottles versus cans as well as six-packs versus eighteen-packs.
+=======
+# Guidelines
+Pay attention to:
+1) how extraneous errors are controlled for,
+2) if and how randomization is implemented,
+3) how you measure various dependent, independent, and control variables, and
+4) the statistical designs proposed and it’s efficiency.
+
+Management is concerned with a number of issues:
+1) The validity of the measurements and experimental design (both internal and external),
+representativeness, and reliability of the results.
+2) That all relevant extraneous factors and customer characteristics are controlled for.
+3) InBev would like to get a sense of the extent that Hertog Jan cannibalizes its other major brands
+in the US: Becks and Stella Artois.
